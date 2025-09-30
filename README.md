@@ -1,3 +1,11 @@
+# 🫧 In A Bubble Lab
+Welcome to the lab where three teams of data structures — Queue, Stack, and HashSet — work together _(and sometimes compete)_ to organise, search, and sort things out in the middle of a chaos of datasets. Bubble and SmartBubble are racing to see who tidies things up the quickest, while Sequential and Binary Search compete to see who finds their targets the fastest.
+Think of it as a lab experiment: each data structure has its own _personality_, each algorithm has its own _strategy_ to work, and you as the user are the lab supervisor controlling the experiments.
+
+## Project Organiser
+Track tasks and the test plan in a Notion workspace:
+[![Notion Dashboard](https://working-guppy-cd0.notion.site/In-A-Bubble-Lab-27ee1fdd31ff8096a298efd177458ee3?source=copy_link)
+
 # 🧭 Table of Contents
 1. [Welcome to the Lab](#in-a-bubble-lab)  
 2. [The Cast](#the-cast)  
@@ -13,10 +21,6 @@
 8. [📜 License](#-licensed)  
 9. [🚫 Ignore Private Data](#-ignore-private-data)  
 10. [✨ Author](#-author)
-
-# 🫧 In A Bubble Lab
-Welcome to the lab where three teams of data structures — Queue, Stack, and HashSet — work together _(and sometimes compete)_ to organise, search, and sort things out in the middle of a chaos of datasets. Bubble and SmartBubble are racing to see who tidies things up the quickest, while Sequential and Binary Search compete to see who finds their targets the fastest.
-Think of it as a lab experiment: each data structure has its own _personality_, each algorithm has its own _strategy_ to work, and you as the user are the lab supervisor controlling the experiments.
 
 # 🎭 The Cast
 Meet the main participants of the lab experiment within the In A Bubble Lab.
