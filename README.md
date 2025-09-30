@@ -11,20 +11,19 @@ Track tasks and the test plan in a Notion workspace:
 - [Issues/Bugs Tracker](https://www.notion.so/Issues-Bugs-Tracker-27ee1fdd31ff800686a2faeda815dd22?pvs=21)
 
 # 🧭 Table of Contents
-1. [Welcome to the Lab](#in-a-bubble-lab)  
-2. [The Cast](#the-cast)  
+1. [The Cast](#the-cast)  
    - [Data Structures: The Teams](#data-structures-the-teams)  
    - [Algorithms: The Strategies](#algorithms-the-strategies)  
    - [GUI: The Control Panel](#gui-the-control-panel)  
    - [Dataset: The Test Subjects](#dataset-the-test-subjects)  
-3. [🧪 The Lab Schedule](#-the-lab-schedule)  
-4. [⚙️ How To Run The Lab](#️-how-to-run-the-lab)  
-5. [🛠 Recommended Tools](#-recommended-tools)  
-6. [📊 Rules](#-rules)  
-7. [🔮 Further Extensions](#-further-extensions)  
-8. [📜 License](#-licensed)  
-9. [🚫 Ignore Private Data](#-ignore-private-data)  
-10. [✨ Author](#-author)
+2. [🧪 The Lab Schedule](#-the-lab-schedule)  
+3. [⚙️ How To Run The Lab](#️-how-to-run-the-lab)  
+4. [🛠 Recommended Tools](#-recommended-tools)  
+5. [📊 Rules](#-rules)  
+6. [🔮 Further Extensions](#-further-extensions)  
+7. [📜 License](#-licensed)  
+8. [🚫 Ignore Private Data](#-ignore-private-data)  
+9. [✨ Author](#-author)
 
 # 🎭 The Cast
 Meet the main participants of the lab experiment within the In A Bubble Lab.
