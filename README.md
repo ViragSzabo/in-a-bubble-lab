@@ -4,7 +4,11 @@ Think of it as a lab experiment: each data structure has its own _personality_, 
 
 ## Project Organiser
 Track tasks and the test plan in a Notion workspace:
-[![Notion Dashboard](https://working-guppy-cd0.notion.site/In-A-Bubble-Lab-27ee1fdd31ff8096a298efd177458ee3?source=copy_link)
+- [Tasks Tracker](https://www.notion.so/27ee1fdd31ff80c2a94cf8293c73016c?pvs=21)
+- [Timeline](https://www.notion.so/Timeline-27ee1fdd31ff80a1a237db5b74cf8f61?pvs=21)
+- [Test Plan](https://www.notion.so/Test-Plan-27ee1fdd31ff80af8d62da415b80880a?pvs=21)
+- [Datasets Library](https://www.notion.so/Datasets-Library-27ee1fdd31ff803184c0c3e30967a8a5?pvs=21)
+- [Issues/Bugs Tracker](https://www.notion.so/Issues-Bugs-Tracker-27ee1fdd31ff800686a2faeda815dd22?pvs=21)
 
 # 🧭 Table of Contents
 1. [Welcome to the Lab](#in-a-bubble-lab)  
