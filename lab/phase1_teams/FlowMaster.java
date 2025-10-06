@@ -2,18 +2,18 @@ package phase1_teams;
 
 import java.util.NoSuchElementException;
 
-public class Queue<T> {
+public class FlowMaster<T> {
     private Node<T> front;
     private Node<T> rear;
     private int size;
 
     private static class Node<T> {
-        private T data;
-        private Node<T> next;
+        final T data;
+        Node<T> next;
         public Node(T data) { this.data = data; }
     }
 
-    public Queue() {
+    public FlowMaster() {
         front = rear = null;
         size = 0;
     }
@@ -21,6 +21,7 @@ public class Queue<T> {
     public void enqueue(T data) {
         Node<T> node = new Node<>(data);
         if (rear != null) { rear.next = node; }
+        rear = node; // always point to the last node in the queue
         if (front == null) { front = rear; }
         size++;
     }
@@ -39,6 +40,6 @@ public class Queue<T> {
         return front.data;
     }
 
-    public boolean isEmpty() { return true; }
+    public boolean isEmpty() { return size == 0; }
     public int size() { return size; }
 }
