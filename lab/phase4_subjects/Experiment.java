@@ -28,9 +28,9 @@ public class Experiment {
             }
             default -> throw new IllegalArgumentException("Unknown structure: " + structure);
         }
+
         long duration = System.nanoTime() - start;
         String formatted;
-
         if (duration < 1_000) {
             formatted = duration + " ns";
         } else if (duration < 1_000_000) {
@@ -46,7 +46,6 @@ public class Experiment {
     private void applyAlgorithm(Object structure, String algorithm) {
         switch (algorithm) {
             case "Bubble", "Smart Bubble" -> {
-                // Simulate sorting (as strings)
                 if (structure instanceof FlowMaster<?> q) {
                     List list = q.toList();
                     Collections.sort((List<String>) list);
@@ -69,7 +68,6 @@ public class Experiment {
                 }
             }
             case "SoapySquad", "FoamMaster" -> {
-                // Shuffle to simulate “cleaning”
                 if (structure instanceof FlowMaster<?> q) {
                     Collections.shuffle((List<?>) q.toList());
                 } else if (structure instanceof PileDriver<?> s) {
