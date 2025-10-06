@@ -56,4 +56,22 @@ public class UniqueVault<T> {
     public String toString() {
         return toList().toString();
     }
+
+    public T getAt(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size());
+        }
+
+        int count = 0;
+        for (List<T> bucket : buckets) {
+            if (index < count + bucket.size()) {
+                // The element is in this bucket
+                return bucket.get(index - count);
+            }
+            count += bucket.size();
+        }
+
+        // This should never happen
+        throw new IllegalStateException("Index calculation error");
+    }
 }

@@ -54,4 +54,13 @@ public class FlowMaster<T> {
         sb.append("null");
         return sb.toString();
     }
+
+    public T peekAt(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        Node<T> current = front; // start from the front
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.data;
+    }
 }

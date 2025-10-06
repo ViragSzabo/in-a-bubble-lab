@@ -97,26 +97,87 @@ class CleaningTeamTest {
     }
 
     @Test
-    void comparePerformanceBetweenTeams() {
-        System.out.println("Flowmaster Cleaning");
-        FlowMaster<Integer> queue = new FlowMaster<>();
-        for (int i = 1000; i > 0; i--) queue.enqueue(i);
+    void compareAllCleaningPerformance() {
+        int size = 10000;
 
         SoapySquad soapy = new SoapySquad();
         FoamMaster foam = new FoamMaster();
 
-        long start1 = System.nanoTime();
-        soapy.cleanQueue(queue);
-        long soapyTime = System.nanoTime() - start1;
+        // Original datasets
+        FlowMaster<Integer> origQueue = buildQueue(size);
+        PileDriver<Integer> origStack = buildStack(size);
+        UniqueVault<Integer> origSet = buildSet(size);
 
-        queue = new FlowMaster<>();
-        for (int i = 1000; i > 0; i--) queue.enqueue(i);
+        System.out.println("=== Queue Cleaning Performance ===");
+        // Queue performance
+        long soapyQueueTime = measureTime(() -> soapy.cleanQueue(copyQueue(origQueue)));
+        long foamQueueTime = measureTime(() -> foam.cleanQueue(copyQueue(origQueue)));
+        System.out.println("SoapySquad: " + soapyQueueTime + " ns");
+        System.out.println("FoamMaster: " + foamQueueTime + " ns");
 
-        long start2 = System.nanoTime();
-        foam.cleanQueue(queue);
-        long foamTime = System.nanoTime() - start2;
+        System.out.println("=== Stack Cleaning Performance ===");
+        // Stack performance
+        long soapyStackTime = measureTime(() -> soapy.cleanStack(copyStack(origStack)));
+        long foamStackTime = measureTime(() -> foam.cleanStack(copyStack(origStack)));
+        System.out.println("SoapySquad: " + soapyStackTime + " ns");
+        System.out.println("FoamMaster: " + foamStackTime + " ns");
 
-        System.out.println("SoapySquad time: " + soapyTime + " ns");
-        System.out.println("FoamMaster time: " + foamTime + " ns");
+        System.out.println("=== Set Cleaning Performance ===");
+        // Set performance
+        long soapySetTime = measureTime(() -> soapy.cleanSet(copySet(origSet)));
+        long foamSetTime = measureTime(() -> foam.cleanSet(copySet(origSet)));
+        System.out.println("SoapySquad: " + soapySetTime + " ns");
+        System.out.println("FoamMaster: " + foamSetTime + " ns");
+    }
+
+    // Helpers to build datasets
+    private FlowMaster<Integer> buildQueue(int size) {
+        FlowMaster<Integer> queue = new FlowMaster<>();
+        for (int i = size; i > 0; i--) queue.enqueue(i);
+        return queue;
+    }
+
+    private PileDriver<Integer> buildStack(int size) {
+        PileDriver<Integer> stack = new PileDriver<>();
+        for (int i = size; i > 0; i--) stack.push(i);
+        return stack;
+    }
+
+    private UniqueVault<Integer> buildSet(int size) {
+        UniqueVault<Integer> set = new UniqueVault<>();
+        for (int i = size; i > 0; i--) set.add(i);
+        return set;
+    }
+
+    // Helpers to copy datasets
+    private FlowMaster<Integer> copyQueue(FlowMaster<Integer> original) {
+        FlowMaster<Integer> copy = new FlowMaster<>();
+        for (int i = 0; i < original.size(); i++) {
+            copy.enqueue(original.peekAt(i));
+        }
+        return copy;
+    }
+
+    private PileDriver<Integer> copyStack(PileDriver<Integer> original) {
+        PileDriver<Integer> copy = new PileDriver<>();
+        for (int i = 0; i < original.size(); i++) {
+            copy.push(original.peekAt(i));
+        }
+        return copy;
+    }
+
+    private UniqueVault<Integer> copySet(UniqueVault<Integer> original) {
+        UniqueVault<Integer> copy = new UniqueVault<>();
+        for (int i = 0; i < original.size(); i++) {
+            copy.add(original.getAt(i));
+        }
+        return copy;
+    }
+
+    // Measure execution time
+    private long measureTime(Runnable action) {
+        long start = System.nanoTime();
+        action.run();
+        return System.nanoTime() - start;
     }
 }
