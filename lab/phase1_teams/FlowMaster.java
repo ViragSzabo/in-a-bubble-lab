@@ -1,5 +1,7 @@
 package phase1_teams;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class FlowMaster<T> {
@@ -62,5 +64,15 @@ public class FlowMaster<T> {
             current = current.next;
         }
         return current.data;
+    }
+
+    public List<T> toList() {
+        List<T> list = new ArrayList<>();
+        Node<T> current = front;
+        while (current != null) {
+            list.add(current.data);
+            current = current.next;
+        }
+        return list;
     }
 }

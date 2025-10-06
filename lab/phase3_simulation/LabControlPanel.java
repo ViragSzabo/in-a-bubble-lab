@@ -1,17 +1,19 @@
 package phase3_simulation;
 
+import phase4_subjects.DatasetManagement;
+import phase4_subjects.Experiment;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 public class LabControlPanel  extends JFrame {
-    private final JButton importButton;
-    private final JButton runButton;
-    private final JButton resetButton;
     private final JComboBox<String> structureCombo;
     private final JComboBox<String> algorithmCombo;
     private final JTextArea outputArea;
     private File importedFile;
+    private java.util.List<String> importedData;
 
     public LabControlPanel() {
         super("\uD83E\uDEE7 In A Bubble Lab - Control Panel");
@@ -20,7 +22,7 @@ public class LabControlPanel  extends JFrame {
 
         // Top panel: Dataset
         JPanel topPanel = new JPanel();
-        importButton = new JButton("Import Dataset");
+        JButton importButton = new JButton("Import Dataset");
         topPanel.add(importButton);
         add(topPanel, BorderLayout.NORTH);
 
@@ -40,8 +42,8 @@ public class LabControlPanel  extends JFrame {
 
         // Bottom panel: run & output
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        runButton = new JButton("Run");
-        resetButton = new JButton("Reset");
+        JButton runButton = new JButton("Run");
+        JButton resetButton = new JButton("Reset");
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(runButton);
         buttonsPanel.add(resetButton);
@@ -69,23 +71,33 @@ public class LabControlPanel  extends JFrame {
         int option = fileChooser.showOpenDialog(this);
         if(option == JFileChooser.APPROVE_OPTION) {
             importedFile = fileChooser.getSelectedFile();
-            outputArea.setText("Imported: " + importedFile.getName());
-            // TODO: read file into a list
+            importedData = new DatasetManagement().loadDataset(importedFile);
+            outputArea.setText("Imported: " + importedFile.getName() +
+                    "\nTotal items: " + importedData.size());
         }
     }
 
     private void runExperiment() {
+        if (importedData == null || importedData.isEmpty()) {
+            outputArea.append("\nPlease import a dataset first!");
+            return;
+        }
+
         String structure = (String) structureCombo.getSelectedItem();
         String algorithm = (String) algorithmCombo.getSelectedItem();
-        outputArea.append("\nRunning " + algorithm + " on " + structure);
-        // TODO: Convert dataset to chosen structure
-        // TODO: Run chosen algorithm
-        // TODO: Display execution time and partial results
+
+        Experiment experiment = new Experiment();
+        String result = experiment.runExperiment(importedData, Objects.requireNonNull(structure), algorithm);
+        outputArea.append("\n" + result);
     }
 
     private void resetDataset() {
-        outputArea.append("\nDataset reset!");
-        // TODO: rebuild original dataset
+        if (importedFile != null) {
+            importedData = new DatasetManagement().loadDataset(importedFile);
+            outputArea.append("\nDataset reset! Total items: " + importedData.size());
+        } else {
+            outputArea.append("\nNo dataset to reset.");
+        }
     }
 
     public static void main(String[] args) {
