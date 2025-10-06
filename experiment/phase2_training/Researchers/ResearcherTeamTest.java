@@ -70,6 +70,22 @@ class ResearcherTeamTest {
 
     @Test
     void comparePerformanceBetweenTeams() {
+        System.out.println("Flowmaster Research");
+        FlowMaster<Integer> queue = new FlowMaster<>();
+        for (int i = 1000; i > 0; i--) queue.enqueue(i);
 
+        LabScanner demoScanner = new LabScanner();
+        LabSniper demoSniper = new LabSniper();
+
+        long start1 = System.nanoTime();
+        demoScanner.searchQueue(queue, 5);
+        long scannerTime = System.nanoTime() - start1;
+
+        long start2 = System.nanoTime();
+        demoSniper.searchQueue(queue, 5);
+        long sniperTime = System.nanoTime() - start2;
+
+        System.out.println("SoapySquad time: " + scannerTime + " ns");
+        System.out.println("FoamMaster time: " + sniperTime + " ns");
     }
 }

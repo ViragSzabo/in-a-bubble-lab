@@ -98,6 +98,7 @@ class CleaningTeamTest {
 
     @Test
     void comparePerformanceBetweenTeams() {
+        System.out.println("Flowmaster Cleaning");
         FlowMaster<Integer> queue = new FlowMaster<>();
         for (int i = 1000; i > 0; i--) queue.enqueue(i);
 
