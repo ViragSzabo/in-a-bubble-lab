@@ -70,7 +70,8 @@ Construction of Queue, Stack, and HashSet with the necessary getters/setters, me
 _Lunch Break (12:00 - 13:00)_
 2. **🧹🐾 Phase 2: Training The Strategies (Algorithms)**
 _Day 1, Afternoon Shift (13:00 - 17:00)_
-The Clean-Up Crew (Bubble, Smart Bubble) starts practising their routine. Following, the Trackers start tracking the items. Prepare to work with the data structures and generic types.
+The Clean-Up Crew (Bubble, Smart Bubble) starts practising their routine. 
+Following, the Researchers start tracking the items. Prepare to work with the data structures and generic types.
 3. **🎛️🖥️ Phase 3: Equipping The Lab (GUI)**
 _Day 2, Morning Shift (9:00 - 12:00)_
 The Control Panel is getting installed — where the performance stats (execution times) are visible — and the supervisor imports datasets, assigns them to teams, and then triggers strategies. 

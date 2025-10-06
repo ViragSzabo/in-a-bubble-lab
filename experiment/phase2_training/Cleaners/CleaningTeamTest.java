@@ -1,4 +1,4 @@
-package phase2_training;
+package phase2_training.Cleaners;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

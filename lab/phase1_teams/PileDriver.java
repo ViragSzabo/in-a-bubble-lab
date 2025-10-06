@@ -48,4 +48,18 @@ public class PileDriver<T> {
         sb.append("null");
         return sb.toString();
     }
+
+    public T peek() {
+        if(isEmpty()) throw new NoSuchElementException("Stack is empty");
+        return top.data;
+    }
+
+    public T peekAt(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        Node<T> current = top;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.data;
+    }
 }

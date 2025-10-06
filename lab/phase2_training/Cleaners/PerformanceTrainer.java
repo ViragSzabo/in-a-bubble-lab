@@ -1,4 +1,4 @@
-package phase2_training;
+package phase2_training.Cleaners;
 
 import phase1_teams.FlowMaster;
 import phase1_teams.PileDriver;
