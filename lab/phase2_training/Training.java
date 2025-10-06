@@ -7,14 +7,11 @@ import phase1_teams.UniqueVault;
 
 public class Training {
     public static void main(String[] args) {
-        // Phase 1: Team Building
         System.out.println("--- Team Building ---");
         TeamBuilding.main(null);
 
-        // Phase 2: Cleaning Crew
-        System.out.println("--- Cleaning Crew Training ---");
+        System.out.println("\n--- Cleaning Crew Training ---");
 
-        // Prepare data for cleaning
         FlowMaster<Integer> flowMaster = new FlowMaster<>();
         flowMaster.enqueue(5);
         flowMaster.enqueue(1);
@@ -33,34 +30,14 @@ public class Training {
         uniqueVault.add(19);
         uniqueVault.add(3);
 
-        SoapySquad bubble = new SoapySquad();
+        CleaningTeam bubble = new SoapySquad();
+        CleaningTeam smartBubble = new FoamMaster();
 
-        System.out.println("--- SoapySquad ---");
-        System.out.println("Flowmaster before: " + flowMaster);
-        bubble.cleanQueue(flowMaster);
-        System.out.println("Flowmaster after: " + flowMaster);
+        PerformanceTrainer.trainTeam(bubble, flowMaster, pileDriver, uniqueVault);
+        PerformanceTrainer.trainTeam(smartBubble, flowMaster, pileDriver, uniqueVault);
 
-        System.out.println("PileDriver before: " + pileDriver);
-        bubble.cleanStack(pileDriver);
-        System.out.println("PileDriver after: " + pileDriver);
-
-        System.out.println("UniqueVault before: " + uniqueVault);
-        bubble.cleanSet(uniqueVault);
-        System.out.println("UniqueVault after: " + uniqueVault);
-
-        FoamMaster smartBubble = new FoamMaster();
-
-        System.out.println("--- FoamMaster ---");
-        System.out.println("Flowmaster before: " + flowMaster);
-        smartBubble.smartCleanQueue(flowMaster);
-        System.out.println("Flowmaster after: " + flowMaster);
-
-        System.out.println("PileDriver before: " + pileDriver);
-        smartBubble.smartCleanStack(pileDriver);
-        System.out.println("PileDriver after: " + pileDriver);
-
-        System.out.println("UniqueVault before: " + uniqueVault);
-        smartBubble.smartCleanSet(uniqueVault);
-        System.out.println("UniqueVault after: " + uniqueVault);
+        System.out.println("\n🏁 Training Complete! 🧼");
+        System.out.println("🧽 Soapy Squad showed solid consistency and bubbly charm!");
+        System.out.println("🫧 Foam Master demonstrated refined technique and faster cleaning!");
     }
 }

@@ -36,4 +36,16 @@ public class PileDriver<T> {
 
     public boolean isEmpty() { return size == 0; }
     public int size() { return size; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node<T> current = top;
+        while(current != null) {
+            sb.append(current.data).append(" -> ");
+            current = current.next;
+        }
+        sb.append("null");
+        return sb.toString();
+    }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UniqueVault<T> {
     private static final int DEFAULT_CAPACITY = 16;
-    private List<T>[] buckets;
+    private final List<T>[] buckets;
 
     public UniqueVault() {
         this.buckets = new List[DEFAULT_CAPACITY];
@@ -51,4 +51,9 @@ public class UniqueVault<T> {
     }
 
     public void clear() { for(List<T> bucket : buckets) bucket.clear(); }
+
+    @Override
+    public String toString() {
+        return toList().toString();
+    }
 }
