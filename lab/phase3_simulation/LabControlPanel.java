@@ -20,41 +20,35 @@ public class LabControlPanel extends Tabbed {
     private JProgressBar progressBar;
     private File importedFile;
     private List<String> importedData;
+    private LabChart chart;
 
     public LabControlPanel() {
         super();
         setTitle("🧫 In A Bubble Lab - Control Panel");
         LabUIStyle.applyGlobalStyle();
-        setFont(LabUIStyle.mainFont());
-        setLayout(new BorderLayout());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Panels
         JPanel controlPanel = createControlPanel();
         JPanel visualizationPanel = new JPanel(new BorderLayout());
-        LabChart chart = LabChart.sampleChart();
-        chart.setPreferredSize(new Dimension(500, 300));
-        visualizationPanel.add(chart, BorderLayout.CENTER);
 
-        // Add tabs properly
-        addLabTabs(controlPanel, visualizationPanel);
+        // In constructor:
+        chart = new LabChart();
+        visualizationPanel.add(chart, BorderLayout.CENTER);
 
         // Add tabs
         addLabTabs(controlPanel, visualizationPanel);
-        pack(); // AFTER adding tabs
+
+        pack();
         setLocationRelativeTo(null);
         setVisible(true);
 
         // Animated title
-        new Timer(150, e -> {
+        new Timer(150, _ -> {
             String[] msgs = {"✨ Initializing...", "🔬 Loading equipment...", "🧪 Ready!"};
             int idx = (int) ((System.currentTimeMillis() / 1500) % msgs.length);
-            setTitle("In A Bubble Lab – " + msgs[idx]);
+            setTitle(STR."In A Bubble Lab – \{msgs[idx]}");
         }).start();
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private JPanel createControlPanel() {
@@ -80,11 +74,10 @@ public class LabControlPanel extends Tabbed {
 
         panel.add(middlePanel, BorderLayout.CENTER);
 
-        // Bottom panel: run button, reset button, output, progress bar
+        // Bottom panel: buttons, output, progress bar
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setPreferredSize(new Dimension(400, 200));
+        bottomPanel.setPreferredSize(new Dimension(500, 200));
 
-        // Buttons
         JPanel buttonsPanel = new JPanel();
         JButton runButton = new JButton("Run");
         JButton resetButton = new JButton("Reset");
@@ -92,20 +85,17 @@ public class LabControlPanel extends Tabbed {
         buttonsPanel.add(resetButton);
         bottomPanel.add(buttonsPanel, BorderLayout.NORTH);
 
-        // Output area
         outputArea = new JTextArea(10, 40);
         outputArea.setEditable(false);
-        outputArea.setPreferredSize(new Dimension(400, 150));
         bottomPanel.add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
-        // Progress bar
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
         bottomPanel.add(progressBar, BorderLayout.SOUTH);
 
         panel.add(bottomPanel, BorderLayout.SOUTH);
 
-        // Hover effect for run button
+        // Button hover effect
         runButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 runButton.setBackground(new Color(120, 150, 255));
@@ -118,12 +108,10 @@ public class LabControlPanel extends Tabbed {
             }
         });
 
-        // Action listeners
-        importButton.addActionListener(e -> importDataset());
-
-        runButton.addActionListener(e -> runExperimentInBackground());
-
-        resetButton.addActionListener(e -> resetDataset());
+        // Actions
+        importButton.addActionListener(_ -> importDataset());
+        runButton.addActionListener(_ -> runExperimentInBackground());
+        resetButton.addActionListener(_ -> resetDataset());
 
         return panel;
     }
@@ -134,8 +122,10 @@ public class LabControlPanel extends Tabbed {
         if (option == JFileChooser.APPROVE_OPTION) {
             importedFile = fileChooser.getSelectedFile();
             importedData = new DatasetManagement().loadDataset(importedFile);
-            outputArea.setText("Imported: " + importedFile.getName() +
-                    "\nTotal items: " + importedData.size());
+            outputArea.setText(
+                    "Imported: " + importedFile.getName() +
+                            "\nTotal items: " + importedData.size()
+            );
         }
     }
 
@@ -151,25 +141,37 @@ public class LabControlPanel extends Tabbed {
         SwingWorker<String, Integer> worker = new SwingWorker<>() {
             @Override
             protected String doInBackground() throws Exception {
+                List<Integer> chartData = importedData.stream()
+                        .map(String::length)
+                        .toList();
+                List<String> labels = importedData;
+
                 for (int i = 0; i <= 100; i += 5) {
                     Thread.sleep(50);
                     publish(i);
                 }
+
                 Experiment experiment = new Experiment();
-                return experiment.runExperiment(importedData, Objects.requireNonNull(structure), algorithm);
+                String result = experiment.runExperiment(importedData, Objects.requireNonNull(structure), algorithm);
+
+                // Optionally update chart after experiment
+                chart.setData(chartData, labels);
+
+                return result;
             }
 
             @Override
             protected void process(List<Integer> chunks) {
-                progressBar.setValue(chunks.get(chunks.size() - 1));
+                progressBar.setValue(chunks.getLast());
             }
 
             @Override
             protected void done() {
                 try {
-                    outputArea.append("\n" + get() + "\n✅ Done!\n");
+                    outputArea.append(get() + "\n✅ Done!\n");
                 } catch (Exception ex) {
-                    outputArea.append("\n❌ Error: " + ex.getMessage());
+                    outputArea.append(STR."""
+                        ❌ Error: \{ex.getMessage()}""");
                 }
             }
         };
@@ -179,13 +181,14 @@ public class LabControlPanel extends Tabbed {
     private void resetDataset() {
         if (importedFile != null) {
             importedData = new DatasetManagement().loadDataset(importedFile);
-            outputArea.append("\nDataset reset! Total items: " + importedData.size());
+            outputArea.append(STR."""
+                Dataset reset! Total items: \{importedData.size()}""");
         } else {
             outputArea.append("\nNo dataset to reset.");
         }
     }
 
-    public static void main(String[] args) {
+    public static void main() {
         SwingUtilities.invokeLater(LabControlPanel::new);
     }
 }

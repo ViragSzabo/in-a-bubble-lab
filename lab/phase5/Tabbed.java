@@ -7,7 +7,6 @@ public abstract class Tabbed extends JFrame {
     protected final JTabbedPane tabs = new JTabbedPane();
 
     public Tabbed() {
-        // Do NOT add tabs here. Just set layout.
         setLayout(new BorderLayout());
     }
 
@@ -19,7 +18,7 @@ public abstract class Tabbed extends JFrame {
         tabs.addTab("Visualization", visualizationPanel);
         tabs.addTab("History", historyPanel);
 
-        tabs.setFont(LabUIStyle.titleFont());
+        tabs.setFont(LabUIStyle.titleFont(14));
         tabs.setPreferredSize(new Dimension(600, 400));
         add(tabs, BorderLayout.CENTER);
     }
