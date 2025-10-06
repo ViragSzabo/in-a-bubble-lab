@@ -1,25 +1,66 @@
 # Research Study Dataset
-# Sample lab dataset for testing algorithms
+# Sample lab dataset for In A Bubble Lab experiments
+# Integers: sample IDs
+# Strings: experiment labels
+# Floats: measurement values
 
 IntegerData:
-5
-23
-17
-42
-8
-31
-2
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
 
 StringData:
 Alpha
+Beta
+Gamma
 Delta
-Charlie
-Bravo
-Echo
+Epsilon
+Zeta
+Eta
+Theta
+Iota
+Kappa
+Lambda
+Mu
+Nu
+Xi
+Omicron
+Pi
+Rho
+Sigma
+Tau
+Upsilon
 
 FloatData:
+0.95
+1.12
 3.14
 2.71
 1.41
 0.99
 9.81
+6.02
+8.31
+7.45
+1.618
+2.236
+0.577
+1.732
+4.669

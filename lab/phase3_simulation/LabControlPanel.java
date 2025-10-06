@@ -14,7 +14,7 @@ public class LabControlPanel  extends JFrame {
     private File importedFile;
 
     public LabControlPanel() {
-        super("In A Bubble Lab - Control Panel");
+        super("\uD83E\uDEE7 In A Bubble Lab - Control Panel");
 
         setLayout(new BorderLayout());
 

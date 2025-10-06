@@ -5,3 +5,9 @@ ExperimentID,Date,Team,Algorithm,DatasetSize,ExecutionTime_ns
 4,2025-10-02,FlowMaster,SmartBubble,200,250000
 5,2025-10-03,PileDriver,Bubble,150,180000
 6,2025-10-03,UniqueVault,SmartBubble,75,80000
+7,2025-10-04,FlowMaster,Bubble,500,620000
+8,2025-10-04,PileDriver,SmartBubble,450,480000
+9,2025-10-05,UniqueVault,Bubble,300,300000
+10,2025-10-05,FlowMaster,SmartBubble,600,720000
+11,2025-10-06,PileDriver,Bubble,400,360000
+12,2025-10-06,UniqueVault,SmartBubble,350,280000
