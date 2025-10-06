@@ -2,15 +2,14 @@ package phase3_simulation;
 
 import phase4_subjects.DatasetManagement;
 import phase4_subjects.Experiment;
-import phase5.LabChart;
-import phase5.LabUIStyle;
-import phase5.Tabbed;
+import phase5_present.LabChart;
+import phase5_present.LabUIStyle;
+import phase5_present.Tabbed;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 public class LabControlPanel extends Tabbed {
 
