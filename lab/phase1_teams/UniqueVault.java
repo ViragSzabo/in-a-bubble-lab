@@ -43,4 +43,12 @@ public class UniqueVault<T> {
     }
 
     public boolean isEmpty() { return size() == 0; }
+
+    public List<T> toList() {
+        List<T> list = new ArrayList<>();
+        for (List<T> bucket : buckets) list.addAll(bucket);
+        return list;
+    }
+
+    public void clear() { for(List<T> bucket : buckets) bucket.clear(); }
 }
