@@ -146,32 +146,52 @@ public class LabControlPanel extends Tabbed {
                         .toList();
                 List<String> labels = importedData;
 
+                // Update chart initially
+                chart.setData(chartData, labels);
+
+                // Progress simulation
                 for (int i = 0; i <= 100; i += 5) {
                     Thread.sleep(50);
                     publish(i);
                 }
 
-                Experiment experiment = new Experiment();
-                String result = experiment.runExperiment(importedData, Objects.requireNonNull(structure), algorithm);
+                // Measure execution time
+                long startTime = System.nanoTime();
 
-                // Optionally update chart after experiment
+                Experiment experiment = new Experiment();
+                String result = experiment.runExperiment(importedData, structure, algorithm);
+
+                //long endTime = System.nanoTime();
+                //double durationSeconds = (endTime - startTime) / 1_000_000_000.0;
+                double durationSeconds = System.nanoTime() - startTime;
+
+                String formatted;
+                if (durationSeconds < 1_000) {
+                    formatted = durationSeconds + " ns";
+                } else if (durationSeconds < 1_000_000) {
+                    formatted = String.format("%.2f μs", durationSeconds / 1_000.0);
+                } else {
+                    formatted = String.format("%.3f ms", durationSeconds / 1_000_000.0);
+                }
+
+                // Update chart after experiment (optional)
                 chart.setData(chartData, labels);
 
-                return result;
+                // Return result including execution time
+                return result + String.format("\n⏱ Execution time: %.2f seconds", durationSeconds);
             }
 
             @Override
             protected void process(List<Integer> chunks) {
-                progressBar.setValue(chunks.getLast());
+                progressBar.setValue(chunks.get(chunks.size() - 1));
             }
 
             @Override
             protected void done() {
                 try {
-                    outputArea.append(get() + "\n✅ Done!\n");
+                    outputArea.append("\n" + get() + "\n✅ Done!\n");
                 } catch (Exception ex) {
-                    outputArea.append(STR."""
-                        ❌ Error: \{ex.getMessage()}""");
+                    outputArea.append("\n❌ Error: " + ex.getMessage());
                 }
             }
         };

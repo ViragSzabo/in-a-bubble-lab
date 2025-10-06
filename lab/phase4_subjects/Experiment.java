@@ -29,17 +29,7 @@ public class Experiment {
             default -> throw new IllegalArgumentException("Unknown structure: " + structure);
         }
 
-        long duration = System.nanoTime() - start;
-        String formatted;
-        if (duration < 1_000) {
-            formatted = duration + " ns";
-        } else if (duration < 1_000_000) {
-            formatted = String.format("%.2f μs", duration / 1_000.0);
-        } else {
-            formatted = String.format("%.3f ms", duration / 1_000_000.0);
-        }
-
-        return String.format("%s on %s completed in %s", algorithm, structure, formatted);
+        return String.format(algorithm, structure);
     }
 
     @SuppressWarnings({"unchecked"})
