@@ -1,0 +1,52 @@
+name: 🚀 Pull Request
+about: Submit your experiment, feature, or bugfix to the Bubble Lab
+title: "[PR] "
+labels: ''
+assignees: ''
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧪 Pull Request Overview
+        Briefly describe what your PR does. Include the feature, bugfix, or experiment you implemented.
+
+  - type: input
+    id: related_issues
+    attributes:
+      label: 🔗 Related Issues
+      description: Link any issues this PR closes or relates to
+      placeholder: "e.g., Closes #12, relates to #34"
+
+  - type: input
+    id: changes
+    attributes:
+      label: ✨ Changes Made
+      description: List the key changes made in this PR
+      placeholder: "1. ...\n2. ...\n3. ..."
+
+  - type: dropdown
+    id: type_of_change
+    attributes:
+      label: 🛠️ Type of Change
+      description: Select the category that best describes your PR
+      options:
+        - Bug Fix 🐞
+        - New Feature ✨
+        - Documentation 📚
+        - Refactor ♻️
+        - Other 🧪
+
+  - type: input
+    id: testing
+    attributes:
+      label: ✅ Testing Steps
+      description: Describe how the changes were tested, including steps to reproduce for bug fixes
+      placeholder: "e.g., Run Experiment X, verify Chart Y updates correctly"
+
+  - type: input
+    id: additional_notes
+    attributes:
+      label: 📝 Additional Notes
+      description: Any extra info reviewers should know
+      placeholder: "Optional"
