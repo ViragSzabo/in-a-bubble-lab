@@ -1,4 +1,3 @@
-![Build Status](https://img.shields.io/github/actions/workflow/status/ViragSzabo/in-a-bubble-lab/build.yml?branch=main)
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen)
 ![Open Issues](https://img.shields.io/github/issues/ViragSzabo/in-a-bubble-lab)
 ![Open PRs](https://img.shields.io/github/issues-pr/ViragSzabo/in-a-bubble-lab)
