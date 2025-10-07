@@ -1,3 +1,10 @@
+![Build Status](https://img.shields.io/github/actions/workflow/status/ViragSzabo/in-a-bubble-lab/build.yml?branch=main)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen)
+![Open Issues](https://img.shields.io/github/issues/ViragSzabo/in-a-bubble-lab)
+![Open PRs](https://img.shields.io/github/issues-pr/ViragSzabo/in-a-bubble-lab)
+![Version](https://img.shields.io/github/v/release/ViragSzabo/in-a-bubble-lab)
+![License](https://img.shields.io/github/license/ViragSzabo/in-a-bubble-lab)
+
 # 🫧 In A Bubble Lab
 Welcome to the lab where three teams of data structures — Queue, Stack, and HashSet — work together _(and sometimes compete)_ to organise, search, and sort things out in the middle of a chaos of datasets. Bubble and SmartBubble are racing to see who tidies things up the quickest, while Sequential and Binary Search compete to see who finds their targets the fastest.
 Think of it as a lab experiment: each data structure has its own _personality_, each algorithm has its own _strategy_ to work, and you as the user are the lab supervisor controlling the experiments.
