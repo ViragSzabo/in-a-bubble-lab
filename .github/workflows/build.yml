@@ -28,19 +28,20 @@ jobs:
     - name: Compile Java files
       run: |
         mkdir -p out
-        echo "🔍 Finding Java source files..."
-        find -name "*.java" > sources.txt
+        echo "🔍 Searching for all Java source files..."
+        find . -name "*.java" > sources.txt
         echo "📄 Files to compile:"
         cat sources.txt
-        echo "🧩 Compiling all sources..."
-        javac -d out @sources.txt
+        echo "🧩 Compiling all sources with preview features enabled..."
+        javac --enable-preview --release 22 -d out @sources.txt
 
     - name: Run Tests
       run: |
-        find experiment -name "*Test.java" > test_sources.txt || true
+        find . -name "*Test.java" > test_sources.txt || true
         if [ -s test_sources.txt ]; then
-          javac -cp .:out:junit-platform-console-standalone.jar @test_sources.txt
-          java -jar junit-platform-console-standalone.jar -cp out --scan-class-path
+          javac --enable-preview --release 22 -cp .:out:junit-platform-console-standalone.jar @test_sources.txt
+          java --enable-preview -jar junit-platform-console-standalone.jar -cp out --scan-class-path
         else
           echo "No test files found."
         fi
+
