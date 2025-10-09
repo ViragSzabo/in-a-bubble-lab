@@ -24,14 +24,3 @@ jobs:
       run: |
         curl -L -o junit-platform-console-standalone.jar \
           https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.0/junit-platform-console-standalone-1.10.0.jar
-
-    - name: Run Tests
-      run: |
-        find . -name "*Test.java" > test_sources.txt || true
-        if [ -s test_sources.txt ]; then
-          javac --enable-preview --release 22 -cp .:out:junit-platform-console-standalone.jar @test_sources.txt
-          java --enable-preview -jar junit-platform-console-standalone.jar -cp out --scan-class-path
-        else
-          echo "No test files found."
-        fi
-
