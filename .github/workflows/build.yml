@@ -25,16 +25,6 @@ jobs:
         curl -L -o junit-platform-console-standalone.jar \
           https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.0/junit-platform-console-standalone-1.10.0.jar
 
-    - name: Compile Java files
-      run: |
-        mkdir -p out
-        echo "🔍 Searching for all Java source files..."
-        find . -name "*.java" > sources.txt
-        echo "📄 Files to compile:"
-        cat sources.txt
-        echo "🧩 Compiling all sources with preview features enabled..."
-        javac --enable-preview --release 22 -d out @sources.txt
-
     - name: Run Tests
       run: |
         find . -name "*Test.java" > test_sources.txt || true
