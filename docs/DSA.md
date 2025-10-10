@@ -41,15 +41,22 @@ Used to store intermediate results during dataset manipulation/simulation steps.
 Used for ensuring datasets/experimental samples contain unique elements.
 
 ## 🧩 Algorithms
-| Algorithm         | Purpose                              | Status | Notes                                         |
-| ----------------- | ------------------------------------ | ------ | --------------------------------------------- |
-| **Bubble Sort**   | Visual sorting of elements           | ✅      | Great for visualization and educational demos |
-| **Smart Bubble Sort**    | A more efficient way of sorting elements    | ✅     | Great for visualization and educational demos                            |
-| **Linear Search** | Simple element lookup                | ✅      | Demonstrates algorithmic flow                 |
-| **Binary Search** | Optimized searching in sorted arrays | ✅     | To be added in advanced module                |
+| Algorithm             | Purpose                           | Status | Notes                                         |
+| --------------------- | --------------------------------- | ------ | --------------------------------------------- |
+| **Bubble Sort**       | Visual sorting of elements        | ✅      | Great for visualization and educational demos |
+| **Smart Bubble Sort** | More efficient sorting method     | ✅      | Optimized for fewer swaps; still educational  |
+| **Linear Search**     | Simple element lookup             | ✅      | Demonstrates algorithmic flow                 |
+| **Binary Search**     | Optimized search in sorted arrays | ✅     | Efficient lookup |
 
 ## 🧮 Design Philosophy
 Every structure and algorithm is designed to be:
 * **Transparent:** Easy to trace and visualise.
 * **Customizable:** Open to modification by contribution.
 * **Educational:** Code readability is prioritised over raw performance.
+
+## 🚀 Future Work & Improvements
+* **Add more classic data structures:** LinkedList, PriorityQueue, TreeSet.
+* Enhance _UniqueVault_ with proper hashing and dynamic resizing.
+* **Implement additional algorithms:** MergeSort, QuickSort, Dijkstra’s pathfinding.
+* Integrate _GUI animations_ for all data structures.
+* Add multi-threading simulation for FlowMaster queues.
