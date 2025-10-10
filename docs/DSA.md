@@ -56,7 +56,5 @@ Every structure and algorithm is designed to be:
 
 ## 🚀 Future Work & Improvements
 * **Add more classic data structures:** LinkedList, PriorityQueue, TreeSet.
-* Enhance _UniqueVault_ with proper hashing and dynamic resizing.
 * **Implement additional algorithms:** MergeSort, QuickSort, Dijkstra’s pathfinding.
-* Integrate _GUI animations_ for all data structures.
-* Add multi-threading simulation for FlowMaster queues.
+* Integrate more _GUI animations_ for all data structures.
