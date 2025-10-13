@@ -8,6 +8,7 @@ import phase2_training.Researchers.LabScanner;
 import phase2_training.Researchers.LabSniper;
 import phase2_training.Researchers.ResearcherTeam;
 import phase4_subjects.DatasetManagement;
+import phase4_subjects.SampleData;
 import phase5_present.LabChart;
 import phase5_present.LabUIStyle;
 import phase5_present.Tabbed;
@@ -165,97 +166,45 @@ public class LabControlPanel extends Tabbed {
         SwingWorker<Void, Integer> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                long startTime = System.nanoTime();
                 outputArea.append("\n--------------------------------------------------\n");
                 outputArea.append(String.format("🧪 Running experiment using %s + %s...\n\n", structure, researching));
                 outputArea.append("📊 Data Summary\n---------------------------\n");
                 outputArea.append(String.format("Items processed: %d\n", importedData.size()));
 
-                List<String> dataCopy = List.copyOf(importedData);
-                String target = dataCopy.get(dataCopy.size() / 2);
-                outputArea.append(String.format("Target element: \"%s\"\n", target));
+                List<SampleData> objectData = importedData.stream().map(SampleData::new).toList();
+                int totalItems = objectData.size();
+                SampleData targetObject = objectData.get(totalItems / 2);
+                outputArea.append(String.format("Target element: \"%s\"\n", targetObject.getValue()));
 
                 // Initialize chart
-                List<Integer> chartData = dataCopy.stream().map(String::length).toList();
-                chart.setData(chartData, dataCopy);
+                List<Integer> chartData = objectData.stream().map(d -> d.getValue().length()).toList();
+                chart.setData(chartData, importedData);
 
-
-                // 🧼 Cleaning phase
+                // Cleaning phase
                 outputArea.append("\n🧼 Cleaning Phase\n---------------------------\n");
-                long cleaningStart = System.nanoTime();
-
                 CleaningTeam cleaningTeam = switch (cleaning) {
-                    case "SoapySquad" -> new SoapySquad();
                     case "FoamMaster" -> new FoamMaster();
                     default -> new SoapySquad();
                 };
-
-                // Structure setup
-                boolean[] results = new boolean[2]; // for sniper, scanner
-
-                switch (structure) {
-                    case "Queue" -> {
-                        FlowMaster<String> queue = new FlowMaster<>(String::compareTo);
-                        dataCopy.forEach(queue::enqueue);
-                        cleaningTeam.cleanQueue(queue);
-                    }
-                    case "Stack" -> {
-                        PileDriver<String> stack = new PileDriver<>(String::compareTo);
-                        dataCopy.forEach(stack::push);
-                        cleaningTeam.cleanStack(stack);
-                    }
-                    case "Set" -> {
-                        UniqueVault<String> set = new UniqueVault<>(String::compareTo);
-                        dataCopy.forEach(set::add);
-                        cleaningTeam.cleanSet(set);
-                    }
-                }
-
-                // 🧠 Research phase
-                outputArea.append("\n🔍 Research Phase\n---------------------------\n");
-                ResearcherTeam researcherTeam = switch (researching) {
-                    case "LabSniper" -> new LabSniper();
-                    case "LabScanner" -> new LabScanner();
-                    default -> new LabSniper();
-                };
-
+                long cleaningStart = System.nanoTime();
+                processStructure(structure, objectData, 0, 50, cleaningTeam, null, null);
                 long cleaningEnd = System.nanoTime();
                 double cleaningDuration = (cleaningEnd - cleaningStart) / 1_000_000.0;
-                outputArea.append(String.format("✅ Cleaning completed in %.2f ms\n", cleaningDuration));
 
-                // Phase 2: Research
+                // Research phase
                 outputArea.append("\n🔍 Research Phase\n---------------------------\n");
-                long researchStart = System.nanoTime();
-
                 ResearcherTeam researcher = switch (researching) {
-                    case "LabSniper" -> new LabSniper();
                     case "LabScanner" -> new LabScanner();
                     default -> new LabSniper();
                 };
-
-                switch (structure) {
-                    case "Queue" -> {
-                        FlowMaster<String> queue = new FlowMaster<>(String::compareTo);
-                        dataCopy.forEach(queue::enqueue);
-                        researcher.searchQueue(queue, target);
-                    }
-                    case "Stack" -> {
-                        PileDriver<String> stack = new PileDriver<>(String::compareTo);
-                        dataCopy.forEach(stack::push);
-                        researcher.searchStack(stack, target);
-                    }
-                    case "Set" -> {
-                        UniqueVault<String> set = new UniqueVault<>(String::compareTo);
-                        dataCopy.forEach(set::add);
-                        researcher.searchSet(set, target);
-                    }
-                }
-
+                long researchStart = System.nanoTime();
+                processStructure(structure, objectData, 50, 100, null, researcher, targetObject);
                 long researchEnd = System.nanoTime();
                 double researchDuration = (researchEnd - researchStart) / 1_000_000.0;
-                outputArea.append(String.format("✅ Research completed in %.2f ms\n", researchDuration));
 
-                // 🧾 Research results
+                // Results
+                outputArea.append(String.format("🧼 Cleaning Algorithm: %s - Duration: %.2f ms\n", cleaning, cleaningDuration));
+                outputArea.append(String.format("🔍 Research Algorithm: %s - Duration: %.2f ms\n", researching, researchDuration));
                 outputArea.append(String.format("\n⏱ Total Duration: %.2f ms\n", cleaningDuration + researchDuration));
                 outputArea.append("--------------------------------------------------\n\n");
 
@@ -264,7 +213,7 @@ public class LabControlPanel extends Tabbed {
 
             @Override
             protected void process(List<Integer> chunks) {
-                progressBar.setValue(chunks.getLast());
+                progressBar.setValue(chunks.get(chunks.size() - 1));
             }
 
             @Override
@@ -272,14 +221,65 @@ public class LabControlPanel extends Tabbed {
                 outputArea.append("✅ Experiment complete!\n\n");
             }
         };
-
         worker.execute();
+    }
+
+    // Generalized processing for both cleaning and research
+    private void processStructure(String structure, List<SampleData> data, int progressStart, int progressEnd,
+                                  CleaningTeam cleaningTeam, ResearcherTeam researcher, SampleData targetObject) {
+        int totalItems = data.size();
+        int updateStep = Math.max(1, totalItems / 50);
+
+        switch (structure) {
+            case "Queue" -> {
+                FlowMaster<SampleData> queue = new FlowMaster<>(SampleData::compareTo);
+                for (int i = 0; i < totalItems; i++) {
+                    queue.enqueue(data.get(i));
+                    if (i % updateStep == 0 || i == totalItems - 1) {
+                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
+                    }
+                }
+                if (cleaningTeam != null) cleaningTeam.cleanQueue(queue);
+                if (researcher != null) researcher.searchQueue(queue, targetObject);
+            }
+            case "Stack" -> {
+                PileDriver<SampleData> stack = new PileDriver<>(SampleData::compareTo);
+                for (int i = 0; i < totalItems; i++) {
+                    stack.push(data.get(i));
+                    if (i % updateStep == 0 || i == totalItems - 1) {
+                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
+                    }
+                }
+                if (cleaningTeam != null) cleaningTeam.cleanStack(stack);
+                if (researcher != null) researcher.searchStack(stack, targetObject);
+            }
+            case "Set" -> {
+                UniqueVault<SampleData> set = new UniqueVault<>(SampleData::compareTo);
+                for (int i = 0; i < totalItems; i++) {
+                    set.add(data.get(i));
+                    if (i % updateStep == 0 || i == totalItems - 1) {
+                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
+                    }
+                }
+                if (cleaningTeam != null) cleaningTeam.cleanSet(set);
+                if (researcher != null) researcher.searchSet(set, targetObject);
+            }
+        }
+    }
+
+    private void publish(int i) {
+        SwingUtilities.invokeLater(() -> progressBar.setValue(i));
     }
 
     private void resetDataset(JButton runButton) {
         if (importedFile != null) {
             importedData = new DatasetManagement().loadDataset(importedFile);
             outputArea.append("\n🔄 Dataset reset! Total items: " + importedData.size());
+
+            // Refresh chart
+            List<Integer> chartData = importedData.stream().map(String::length).toList();
+            chart.setData(chartData, importedData);
+
             runButton.setEnabled(true);
         }
     }
