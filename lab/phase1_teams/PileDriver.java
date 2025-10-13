@@ -51,4 +51,14 @@ public class PileDriver<T> extends LinearStructure<T> {
         }
         return list;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            sb.append(peekAt(i));
+            if (i < size() - 1) sb.append(" | ");
+        }
+        return sb.toString();
+    }
 }

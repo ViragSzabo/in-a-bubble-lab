@@ -105,6 +105,13 @@ public class UniqueVault<T> {
 
     @Override
     public String toString() {
-        return toList().toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < size(); i++) {
+            sb.append(getAt(i));
+            if (i < size() - 1) sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -58,4 +58,14 @@ public class FlowMaster<T> extends LinearStructure<T> {
         }
         return list;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            sb.append(peekAt(i)).append(" -> ");
+        }
+        sb.append("null");
+        return sb.toString();
+    }
 }
