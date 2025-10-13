@@ -174,26 +174,42 @@ public class LabControlPanel extends Tabbed {
                 List<String> dataCopy = List.copyOf(importedData);
                 String target = dataCopy.get(dataCopy.size() / 2);
                 outputArea.append(String.format("Target element: \"%s\"\n", target));
-                outputArea.append("\n🧼 Cleaning Phase\n---------------------------\n");
 
+                // Initialize chart
                 List<Integer> chartData = dataCopy.stream().map(String::length).toList();
                 chart.setData(chartData, dataCopy);
 
-                // Simulate progress
-                for (int i = 0; i <= 100; i += 5) {
-                    Thread.sleep(30);
-                    publish(i);
-                }
 
                 // 🧼 Cleaning phase
+                outputArea.append("\n🧼 Cleaning Phase\n---------------------------\n");
+                long cleaningStart = System.nanoTime();
+
                 CleaningTeam cleaningTeam = switch (cleaning) {
                     case "SoapySquad" -> new SoapySquad();
                     case "FoamMaster" -> new FoamMaster();
                     default -> new SoapySquad();
                 };
 
-                outputArea.append("Team: " + cleaningTeam.getClass().getSimpleName() + "\n");
-                outputArea.append("Result: Completed successfully\n");
+                // Structure setup
+                boolean[] results = new boolean[2]; // for sniper, scanner
+
+                switch (structure) {
+                    case "Queue" -> {
+                        FlowMaster<String> queue = new FlowMaster<>(String::compareTo);
+                        dataCopy.forEach(queue::enqueue);
+                        cleaningTeam.cleanQueue(queue);
+                    }
+                    case "Stack" -> {
+                        PileDriver<String> stack = new PileDriver<>(String::compareTo);
+                        dataCopy.forEach(stack::push);
+                        cleaningTeam.cleanStack(stack);
+                    }
+                    case "Set" -> {
+                        UniqueVault<String> set = new UniqueVault<>(String::compareTo);
+                        dataCopy.forEach(set::add);
+                        cleaningTeam.cleanSet(set);
+                    }
+                }
 
                 // 🧠 Research phase
                 outputArea.append("\n🔍 Research Phase\n---------------------------\n");
@@ -203,38 +219,44 @@ public class LabControlPanel extends Tabbed {
                     default -> new LabSniper();
                 };
 
-                // 🧩 Structure loading, cleaning + searching
+                long cleaningEnd = System.nanoTime();
+                double cleaningDuration = (cleaningEnd - cleaningStart) / 1_000_000.0;
+                outputArea.append(String.format("✅ Cleaning completed in %.2f ms\n", cleaningDuration));
+
+                // Phase 2: Research
+                outputArea.append("\n🔍 Research Phase\n---------------------------\n");
+                long researchStart = System.nanoTime();
+
+                ResearcherTeam researcher = switch (researching) {
+                    case "LabSniper" -> new LabSniper();
+                    case "LabScanner" -> new LabScanner();
+                    default -> new LabSniper();
+                };
+
                 switch (structure) {
                     case "Queue" -> {
                         FlowMaster<String> queue = new FlowMaster<>(String::compareTo);
-                        for (String s : dataCopy) queue.enqueue(s);
-
-                        cleaningTeam.cleanQueue(queue);
-                        researcherTeam.searchQueue(queue, target);
+                        dataCopy.forEach(queue::enqueue);
+                        researcher.searchQueue(queue, target);
                     }
-
                     case "Stack" -> {
                         PileDriver<String> stack = new PileDriver<>(String::compareTo);
-                        for (String s : dataCopy) stack.push(s);
-
-                        cleaningTeam.cleanStack(stack);
-                        researcherTeam.searchStack(stack, target);
+                        dataCopy.forEach(stack::push);
+                        researcher.searchStack(stack, target);
                     }
-
                     case "Set" -> {
                         UniqueVault<String> set = new UniqueVault<>(String::compareTo);
-                        for (String s : dataCopy) set.add(s);
-
-                        cleaningTeam.cleanSet(set);
-                        researcherTeam.searchSet(set, target);
+                        dataCopy.forEach(set::add);
+                        researcher.searchSet(set, target);
                     }
                 }
 
+                long researchEnd = System.nanoTime();
+                double researchDuration = (researchEnd - researchStart) / 1_000_000.0;
+                outputArea.append(String.format("✅ Research completed in %.2f ms\n", researchDuration));
+
                 // 🧾 Research results
-                long endTime = System.nanoTime();
-                double duration = (endTime - startTime) / 1_000_000.0;
-                outputArea.append(String.format("\n⏱ Total Duration: %.2f ms\n", duration));
-                outputArea.append("✅ Experiment complete!\n");
+                outputArea.append(String.format("\n⏱ Total Duration: %.2f ms\n", cleaningDuration + researchDuration));
                 outputArea.append("--------------------------------------------------\n\n");
 
                 return null;
