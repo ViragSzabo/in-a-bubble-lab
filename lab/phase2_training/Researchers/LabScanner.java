@@ -4,45 +4,62 @@ import phase1_teams.FlowMaster;
 import phase1_teams.PileDriver;
 import phase1_teams.UniqueVault;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class LabScanner implements ResearcherTeam {
 
+    // With comparator
+    @Override
+    public <T extends Comparable<T>> int searchQueue(FlowMaster<T> flowMaster, T target, Comparator<? super T> comparator) {
+        var list = flowMaster.toList();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(target)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public <T extends Comparable<T>> int searchStack(PileDriver<T> pileDriver, T target, Comparator<? super T> comparator) {
+        var list = pileDriver.toList();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(target)) return i;
+        }
+        return -1;
+    }
+
+    // Without comparator
     @Override
     public <T extends Comparable<T>> int searchQueue(FlowMaster<T> flowMaster, T target) {
-        int size = flowMaster.size();
-        for (int i = 0; i < size; i++) {
-            T item = flowMaster.dequeue();
-            flowMaster.enqueue(item);
-            if(item.equals(target)) return i;
+        var list = flowMaster.toList();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(target)) return i;
         }
         return -1;
     }
 
     @Override
     public <T extends Comparable<T>> int searchStack(PileDriver<T> pileDriver, T target) {
-        int size = pileDriver.size();
-        PileDriver<T> tempStack = new PileDriver<>();
-        int index = -1;
-
-        // Move all items to tempStack (reverse stack)
-        for (int i = 0; i < size; i++) {
-            tempStack.push(pileDriver.pop());
+        var list = pileDriver.toList();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(target)) return i;
         }
-
-        // Restore original stack and compute index from top
-        for (int i = 0; i < size; i++) {
-            T item = tempStack.pop();
-            pileDriver.push(item);
-            if(item.equals(target) && index == -1) {
-                index = size - i - 1; // ✅ top = 0, bottom = size - 1
-            }
-        }
-
-        return index;
+        return -1;
     }
 
     @Override
     public <T extends Comparable<T>> boolean searchSet(UniqueVault<T> uniqueVault, T target) {
         return uniqueVault.contains(target);
+    }
+
+    @Override
+    public <T extends Comparable<T>> boolean searchSet(UniqueVault<T> uniqueVault, T target, Comparator<? super T> comparator) {
+        List<T> list = uniqueVault.toList();
+        for (T element : list) {
+            if (comparator.compare(element, target) == 0) return true;
+        }
+        return false;
     }
 
     @Override

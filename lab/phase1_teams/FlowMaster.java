@@ -1,33 +1,37 @@
 package phase1_teams;
 
+import phase1_teams.Reuseables.LinearStructure;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class FlowMaster<T> {
-    private Node<T> front;
-    private Node<T> rear;
-    private int size;
+/**
+ * FlowMaster is a generic Queue (FIFO) implementation.
+ * Demonstrates data structure manipulation, generics, and mutual comparison.
+ *
+ * @param <T> the type of elements stored in the queue.
+ */
+public class FlowMaster<T> extends LinearStructure<T> {
 
-    private static class Node<T> {
-        final T data;
-        Node<T> next;
-        public Node(T data) { this.data = data; }
-    }
+    /** The pointer of the front (head) and the rear (tail) of the queue. */
+    private Node<T> front, rear;
 
-    public FlowMaster() {
-        front = rear = null;
-        size = 0;
-    }
+    /** Construction for an empty queue with/without custom comparator */
+    public FlowMaster(Comparator<T> comparator) { super(comparator); }
+    public FlowMaster() { super(); }
 
+    /** Add an element to the rear (tail) of the queue */
     public void enqueue(T data) {
         Node<T> node = new Node<>(data);
-        if (rear != null) { rear.next = node; }
-        rear = node; // always point to the last node in the queue
-        if (front == null) { front = rear; }
+        if (rear != null) rear.next = node;
+        rear = node;
+        if (front == null) front = rear;
         size++;
     }
 
+    /** Remove and return the front (head) element */
     public T dequeue() {
         if (isEmpty()) throw new NoSuchElementException("Queue is empty");
         T data = front.data;
@@ -37,35 +41,14 @@ public class FlowMaster<T> {
         return data;
     }
 
+    /** Return the front (head) element without removing it */
     public T peek() {
         if (isEmpty()) throw new NoSuchElementException("Queue is empty");
         return front.data;
     }
 
-    public boolean isEmpty() { return size == 0; }
-    public int size() { return size; }
-
+    /** Convert queue contents to a List */
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        Node<T> current = front;
-        while(current != null) {
-            sb.append(current.data).append(" -> ");
-            current = current.next;
-        }
-        sb.append("null");
-        return sb.toString();
-    }
-
-    public T peekAt(int index) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        Node<T> current = front; // start from the front
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current.data;
-    }
-
     public List<T> toList() {
         List<T> list = new ArrayList<>();
         Node<T> current = front;

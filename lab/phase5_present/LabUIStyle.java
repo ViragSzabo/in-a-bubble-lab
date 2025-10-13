@@ -37,6 +37,10 @@ public class LabUIStyle {
         button.setFocusPainted(false);
     }
 
+    public static void stylePanel(JPanel panel) {
+        panel.setBackground(CONTROL_BG);
+    }
+
     public static void applyDarkTheme() {
         UIManager.put("control", new Color(40, 40, 50));
         UIManager.put("text", new Color(220, 220, 220));
@@ -44,9 +48,5 @@ public class LabUIStyle {
         UIManager.put("nimbusBlueGrey", new Color(70, 70, 80));
         UIManager.put("nimbusFocus", new Color(80, 120, 200));
         UIManager.put("nimbusSelectionBackground", new Color(60, 90, 180));
-    }
-
-    public static void stylePanel(JPanel panel) {
-        panel.setBackground(CONTROL_BG);
     }
 }

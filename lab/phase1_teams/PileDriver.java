@@ -1,33 +1,32 @@
 package phase1_teams;
 
+import phase1_teams.Reuseables.LinearStructure;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class PileDriver<T> {
+/**
+ * PileDriver is a generic Stack (LIFO) implementation.
+ *
+ * @param <T> the type of elements stored in the stack.
+ */
+public class PileDriver<T> extends LinearStructure<T> {
+    /** The top of the stack. */
     private Node<T> top;
-    private int size;
 
-    private static class Node<T>{
-        T data;
-        Node<T> next;
-        public Node(T data, Node<T> next) {
-            this.data = data;
-            this.next = next;
-        }
-    }
+    /** Construction for an empty queue with/without custom comparator */
+    public PileDriver() { super(); }
+    public PileDriver(Comparator<T> comparator) { super(comparator); }
 
-    public PileDriver() {
-        top = null;
-        size = 0;
-    }
-
+    /** Adds an element to the top of the stack */
     public void push(T data) {
-        Node<T> newNode = new Node<T>(data, top);
-        top = newNode;
+        top = new Node<>(data, top);
         size++;
     }
 
+    /** Removes and returns the top  element of the stack */
     public T pop(){
         if(isEmpty()) throw new NoSuchElementException("Stack is empty");
         T data = top.data;
@@ -36,35 +35,13 @@ public class PileDriver<T> {
         return data;
     }
 
-    public boolean isEmpty() { return size == 0; }
-    public int size() { return size; }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        Node<T> current = top;
-        while(current != null) {
-            sb.append(current.data).append(" -> ");
-            current = current.next;
-        }
-        sb.append("null");
-        return sb.toString();
-    }
-
+    /** Returns the top element without removing it */
     public T peek() {
         if(isEmpty()) throw new NoSuchElementException("Stack is empty");
         return top.data;
     }
 
-    public T peekAt(int index) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        Node<T> current = top;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current.data;
-    }
-
+    @Override
     public List<T> toList() {
         List<T> list = new ArrayList<>();
         Node<T> current = top;

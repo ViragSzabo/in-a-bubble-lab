@@ -3,17 +3,17 @@ package phase5_present;
 import javax.swing.*;
 import java.awt.*;
 
-public class ProgressBar {
-    private final JProgressBar progressBar = new JProgressBar(0, 100);
+public class ProgressBar extends JPanel {
+    private final JProgressBar progressBar;
 
-    private void setupProgressBar(JPanel bottomPanel) {
+    public ProgressBar() {
+        setLayout(new BorderLayout());
+        progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
-        bottomPanel.add(progressBar, BorderLayout.SOUTH);
+        add(progressBar, BorderLayout.SOUTH);
     }
 
-    private JPanel createVisualizationPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(LabChart.sampleChart(), BorderLayout.CENTER);
-        return panel;
+    public void setProgress(int value) {
+        progressBar.setValue(Math.min(Math.max(value, 0), 100));
     }
 }

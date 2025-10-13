@@ -5,6 +5,8 @@ import phase1_teams.PileDriver;
 import phase1_teams.TeamBuilding;
 import phase1_teams.UniqueVault;
 
+import java.util.Comparator;
+
 public class Training {
     public static void main(String[] args) {
         System.out.println("--- Team Building ---");
@@ -33,8 +35,14 @@ public class Training {
         CleaningTeam bubble = new SoapySquad();
         CleaningTeam smartBubble = new FoamMaster();
 
+        // Natural order
         PerformanceTrainer.trainTeam(bubble, flowMaster, pileDriver, uniqueVault);
         PerformanceTrainer.trainTeam(smartBubble, flowMaster, pileDriver, uniqueVault);
+
+        // Comparator: descending order
+        Comparator<Integer> descComparator = (a, b) -> b - a;
+        PerformanceTrainer.trainTeam(bubble, flowMaster, pileDriver, uniqueVault, descComparator);
+        PerformanceTrainer.trainTeam(smartBubble, flowMaster, pileDriver, uniqueVault, descComparator);
 
         System.out.println("\n🏁 Training Complete! 🧼");
         System.out.println("🧽 Soapy Squad showed solid consistency and bubbly charm!");

@@ -19,7 +19,7 @@ public abstract class Tabbed extends JFrame {
         tabs.addTab("History", historyPanel);
 
         tabs.setFont(LabUIStyle.titleFont(14));
-        tabs.setPreferredSize(new Dimension(600, 400));
+        tabs.setPreferredSize(new Dimension(700, 500));
         add(tabs, BorderLayout.CENTER);
     }
 }

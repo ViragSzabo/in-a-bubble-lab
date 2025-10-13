@@ -7,27 +7,22 @@ import phase1_teams.UniqueVault;
 import java.util.List;
 
 public class Convert {
-    public FlowMaster<String> toQueue(List<String> data) {
-        FlowMaster<String> flowMaster = new FlowMaster<>();
-        for (String s : data) {
-            flowMaster.enqueue(s);
-        }
+
+    public <T> FlowMaster<T> toQueue(List<T> data) {
+        FlowMaster<T> flowMaster = new FlowMaster<>();
+        data.forEach(flowMaster::enqueue);
         return flowMaster;
     }
 
-    public PileDriver<String> toStack(List<String> data) {
-        PileDriver<String> pileDriver = new PileDriver<>();
-        for (String s : data) {
-            pileDriver.push(s);
-        }
+    public <T> PileDriver<T> toStack(List<T> data) {
+        PileDriver<T> pileDriver = new PileDriver<>();
+        data.forEach(pileDriver::push);
         return pileDriver;
     }
 
-    public UniqueVault<String> toSet(List<String> data) {
-        UniqueVault<String> uniqueVault = new UniqueVault<>();
-        for (String s : data) {
-            uniqueVault.add(s);
-        }
+    public <T> UniqueVault<T> toSet(List<T> data) {
+        UniqueVault<T> uniqueVault = new UniqueVault<>();
+        data.forEach(uniqueVault::add);
         return uniqueVault;
     }
 }
