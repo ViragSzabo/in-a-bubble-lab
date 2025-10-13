@@ -66,7 +66,7 @@ public class LabControlPanel extends Tabbed {
         // Dataset import
         JPanel topPanel = new JPanel();
         JButton importButton = new JButton("Import Dataset");
-        importButton.setToolTipText("Select a CSV or TXT file to load your dataset");
+        importButton.setToolTipText("Select a CSV or TXT or JSON file to load your dataset");
         topPanel.add(importButton);
         panel.add(topPanel, BorderLayout.NORTH);
 
@@ -146,10 +146,20 @@ public class LabControlPanel extends Tabbed {
         int option = fileChooser.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             importedFile = fileChooser.getSelectedFile();
-            importedData = new DatasetManagement().loadDataset(importedFile);
-            outputArea.setText("📂 Imported: " + importedFile.getName() +
-                    "\n📊 Total items: " + importedData.size());
-            runButton.setEnabled(true);
+            try {
+                importedData = new DatasetManagement().loadDataset(importedFile);
+                if (importedData.isEmpty()) {
+                    outputArea.setText("⚠️ Imported dataset is empty!");
+                    runButton.setEnabled(false);
+                } else {
+                    outputArea.setText("📂 Imported: " + importedFile.getName() +
+                            "\n📊 Total items: " + importedData.size());
+                    runButton.setEnabled(true);
+                }
+            } catch (Exception e) {
+                outputArea.setText("❌ Failed to load dataset: " + e.getMessage());
+                runButton.setEnabled(false);
+            }
         }
     }
 
@@ -165,55 +175,70 @@ public class LabControlPanel extends Tabbed {
 
         SwingWorker<Void, Integer> worker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground() throws Exception {
-                outputArea.append("\n--------------------------------------------------\n");
-                outputArea.append(String.format("🧪 Running experiment using %s + %s...\n\n", structure, researching));
-                outputArea.append("📊 Data Summary\n---------------------------\n");
-                outputArea.append(String.format("Items processed: %d\n", importedData.size()));
+            protected Void doInBackground() {
+                try {
+                    outputArea.append("\n--------------------------------------------------\n");
+                    outputArea.append(String.format("🧪 Running experiment using %s + %s...\n\n", structure, researching));
+                    outputArea.append("📊 Data Summary\n---------------------------\n");
+                    outputArea.append(String.format("Items processed: %d\n", importedData.size()));
 
-                List<SampleData> objectData = importedData.stream().map(SampleData::new).toList();
-                int totalItems = objectData.size();
-                SampleData targetObject = objectData.get(totalItems / 2);
-                outputArea.append(String.format("Target element: \"%s\"\n", targetObject.getValue()));
+                    List<SampleData> objectData = importedData.stream()
+                            .filter(s -> s != null && !s.isEmpty()) // skip empty lines
+                            .map(SampleData::new)
+                            .toList();
 
-                // Initialize chart
-                List<Integer> chartData = objectData.stream().map(d -> d.getValue().length()).toList();
-                chart.setData(chartData, importedData);
+                    if (objectData.isEmpty()) {
+                        outputArea.append("⚠️ Dataset contains no valid data after filtering!\n");
+                        return null;
+                    }
 
-                // Cleaning phase
-                outputArea.append("\n🧼 Cleaning Phase\n---------------------------\n");
-                CleaningTeam cleaningTeam = switch (cleaning) {
-                    case "FoamMaster" -> new FoamMaster();
-                    default -> new SoapySquad();
-                };
-                long cleaningStart = System.nanoTime();
-                processStructure(structure, objectData, 0, 50, cleaningTeam, null, null);
-                long cleaningEnd = System.nanoTime();
-                double cleaningDuration = (cleaningEnd - cleaningStart) / 1_000_000.0;
+                    int totalItems = objectData.size();
+                    SampleData targetObject = objectData.get(totalItems / 2);
+                    outputArea.append(String.format("Target element: \"%s\"\n", targetObject.getValue()));
 
-                // Research phase
-                outputArea.append("\n🔍 Research Phase\n---------------------------\n");
-                ResearcherTeam researcher = switch (researching) {
-                    case "LabScanner" -> new LabScanner();
-                    default -> new LabSniper();
-                };
-                long researchStart = System.nanoTime();
-                processStructure(structure, objectData, 50, 100, null, researcher, targetObject);
-                long researchEnd = System.nanoTime();
-                double researchDuration = (researchEnd - researchStart) / 1_000_000.0;
+                    // Initialize chart
+                    List<Integer> chartData = objectData.stream().map(d -> d.getValue().length()).toList();
+                    chart.setData(chartData, importedData);
 
-                // Results
-                outputArea.append(String.format("🧼 Cleaning Algorithm: %s - Duration: %.2f ms\n", cleaning, cleaningDuration));
-                outputArea.append(String.format("🔍 Research Algorithm: %s - Duration: %.2f ms\n", researching, researchDuration));
-                outputArea.append(String.format("\n⏱ Total Duration: %.2f ms\n", cleaningDuration + researchDuration));
-                outputArea.append("--------------------------------------------------\n\n");
+                    // Cleaning phase
+                    outputArea.append("\n🧼 Cleaning Phase\n---------------------------\n");
+                    CleaningTeam cleaningTeam = switch (cleaning) {
+                        case "FoamMaster" -> new FoamMaster();
+                        default -> new SoapySquad();
+                    };
+                    long cleaningStart = System.nanoTime();
+                    processStructure(structure, objectData, 0, 50, cleaningTeam, null, targetObject);
+                    long cleaningEnd = System.nanoTime();
+                    double cleaningDuration = (cleaningEnd - cleaningStart) / 1_000_000.0;
 
+                    // Research phase
+                    outputArea.append("\n🔍 Research Phase\n---------------------------\n");
+                    ResearcherTeam researcher = switch (researching) {
+                        case "LabScanner" -> new LabScanner();
+                        default -> new LabSniper();
+                    };
+                    long researchStart = System.nanoTime();
+                    processStructure(structure, objectData, 50, 100, null, researcher, targetObject);
+                    long researchEnd = System.nanoTime();
+                    double researchDuration = (researchEnd - researchStart) / 1_000_000.0;
+
+                    // Results
+                    outputArea.append(String.format("🧼 Cleaning Algorithm: %s - Duration: %.2f ms\n", cleaning, cleaningDuration));
+                    outputArea.append(String.format("🔍 Research Algorithm: %s - Duration: %.2f ms\n", researching, researchDuration));
+                    outputArea.append(String.format("\n⏱ Total Duration: %.2f ms\n", cleaningDuration + researchDuration));
+                    outputArea.append("--------------------------------------------------\n\n");
+
+                } catch (Exception e) {
+                    outputArea.append("❌ Experiment failed: " + e.getMessage() + "\n");
+                }
                 return null;
             }
 
             @Override
             protected void process(List<Integer> chunks) {
-                progressBar.setValue(chunks.get(chunks.size() - 1));
+                if (!chunks.isEmpty()) {
+                    progressBar.setValue(chunks.get(chunks.size() - 1));
+                }
             }
 
             @Override
@@ -224,20 +249,21 @@ public class LabControlPanel extends Tabbed {
         worker.execute();
     }
 
-    // Generalized processing for both cleaning and research
+    // Smooth, detailed processing with optional trace
     private void processStructure(String structure, List<SampleData> data, int progressStart, int progressEnd,
                                   CleaningTeam cleaningTeam, ResearcherTeam researcher, SampleData targetObject) {
+
         int totalItems = data.size();
-        int updateStep = Math.max(1, totalItems / 50);
 
         switch (structure) {
             case "Queue" -> {
                 FlowMaster<SampleData> queue = new FlowMaster<>(SampleData::compareTo);
                 for (int i = 0; i < totalItems; i++) {
-                    queue.enqueue(data.get(i));
-                    if (i % updateStep == 0 || i == totalItems - 1) {
-                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
-                    }
+                    SampleData item = data.get(i);
+                    queue.enqueue(item);
+                    // Optional trace: show first 5 items
+                    if (i < 5) outputArea.append("Adding to queue: " + item.getValue() + "\n");
+                    publish(progressStart + (int) ((i + 1) * (progressEnd - progressStart) / (double) totalItems));
                 }
                 if (cleaningTeam != null) cleaningTeam.cleanQueue(queue);
                 if (researcher != null) researcher.searchQueue(queue, targetObject);
@@ -245,10 +271,10 @@ public class LabControlPanel extends Tabbed {
             case "Stack" -> {
                 PileDriver<SampleData> stack = new PileDriver<>(SampleData::compareTo);
                 for (int i = 0; i < totalItems; i++) {
-                    stack.push(data.get(i));
-                    if (i % updateStep == 0 || i == totalItems - 1) {
-                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
-                    }
+                    SampleData item = data.get(i);
+                    stack.push(item);
+                    if (i < 5) outputArea.append("Pushing to stack: " + item.getValue() + "\n");
+                    publish(progressStart + (int) ((i + 1) * (progressEnd - progressStart) / (double) totalItems));
                 }
                 if (cleaningTeam != null) cleaningTeam.cleanStack(stack);
                 if (researcher != null) researcher.searchStack(stack, targetObject);
@@ -256,10 +282,10 @@ public class LabControlPanel extends Tabbed {
             case "Set" -> {
                 UniqueVault<SampleData> set = new UniqueVault<>(SampleData::compareTo);
                 for (int i = 0; i < totalItems; i++) {
-                    set.add(data.get(i));
-                    if (i % updateStep == 0 || i == totalItems - 1) {
-                        publish(progressStart + (int) Math.round((i + 1) * (progressEnd - progressStart) / (double) totalItems));
-                    }
+                    SampleData item = data.get(i);
+                    boolean added = set.add(item);
+                    if (i < 5) outputArea.append("Adding to set: " + item.getValue() + (added ? "" : " (duplicate skipped)") + "\n");
+                    publish(progressStart + (int) ((i + 1) * (progressEnd - progressStart) / (double) totalItems));
                 }
                 if (cleaningTeam != null) cleaningTeam.cleanSet(set);
                 if (researcher != null) researcher.searchSet(set, targetObject);
@@ -273,14 +299,16 @@ public class LabControlPanel extends Tabbed {
 
     private void resetDataset(JButton runButton) {
         if (importedFile != null) {
-            importedData = new DatasetManagement().loadDataset(importedFile);
-            outputArea.append("\n🔄 Dataset reset! Total items: " + importedData.size());
-
-            // Refresh chart
-            List<Integer> chartData = importedData.stream().map(String::length).toList();
-            chart.setData(chartData, importedData);
-
-            runButton.setEnabled(true);
+            try {
+                importedData = new DatasetManagement().loadDataset(importedFile);
+                outputArea.append("\n🔄 Dataset reset! Total items: " + importedData.size());
+                // Refresh chart
+                List<Integer> chartData = importedData.stream().filter(s -> s != null).map(String::length).toList();
+                chart.setData(chartData, importedData);
+                runButton.setEnabled(true);
+            } catch (Exception e) {
+                outputArea.append("\n❌ Failed to reset dataset: " + e.getMessage());
+            }
         }
     }
 
